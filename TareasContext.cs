@@ -38,6 +38,7 @@ namespace entitiyframework
                 categoria.HasKey(p => p.CategoriaId);
                 categoria.Property(p => p.Nombre).IsRequired().HasMaxLength(50);
                 categoria.Property(p => p.Descripcion);
+                categoria.Property(p => p.Peso);
             });
         }
     }
