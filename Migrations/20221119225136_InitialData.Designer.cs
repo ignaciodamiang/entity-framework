@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using entitiyframework;
 
@@ -11,9 +12,11 @@ using entitiyframework;
 namespace projectoef.Migrations
 {
     [DbContext(typeof(TareasContext))]
-    partial class TareasContextModelSnapshot : ModelSnapshot
+    [Migration("20221119225136_InitialData")]
+    partial class InitialData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,6 +32,7 @@ namespace projectoef.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Descripcion")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nombre")
@@ -70,6 +74,7 @@ namespace projectoef.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Descripcion")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("FechaCreacion")
@@ -95,7 +100,7 @@ namespace projectoef.Migrations
                             TareaId = new Guid("40d79cef-73f1-4fe8-8a6c-168d99e4260b"),
                             CategoriaId = new Guid("40d79cef-73f1-4fe8-8a6c-168d99e4260a"),
                             Descripcion = "Tarea 1 de trabajo",
-                            FechaCreacion = new DateTime(2022, 11, 19, 20, 3, 41, 382, DateTimeKind.Local).AddTicks(466),
+                            FechaCreacion = new DateTime(2022, 11, 19, 19, 51, 36, 378, DateTimeKind.Local).AddTicks(442),
                             PrioridadTarea = 0,
                             Titulo = "Tarea 1"
                         },
@@ -104,7 +109,7 @@ namespace projectoef.Migrations
                             TareaId = new Guid("40d79cef-73f1-4fe8-8a6c-168d99e4260c"),
                             CategoriaId = new Guid("40d79cef-73f1-4fe8-8a6c-168d99e426bc"),
                             Descripcion = "Tarea 2 personal",
-                            FechaCreacion = new DateTime(2022, 11, 19, 20, 3, 41, 382, DateTimeKind.Local).AddTicks(480),
+                            FechaCreacion = new DateTime(2022, 11, 19, 19, 51, 36, 378, DateTimeKind.Local).AddTicks(454),
                             PrioridadTarea = 1,
                             Titulo = "Tarea 2"
                         });
