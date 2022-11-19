@@ -1,4 +1,5 @@
 using entitiyframework;
+using entitiyframework.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,10 +19,21 @@ app.MapGet("/dbconnection", async ([FromServices] TareasContext dbContext) =>
     return Results.Ok("Base de datos en memoria: " + dbContext.Database.IsInMemory());
 });
 
-// Obtener todas las tareas
 app.MapGet("/api/tareas", async ([FromServices] TareasContext dbContext) => 
 {
     return Results.Ok(dbContext.Tareas.Include(p=>p.Categoria).Where(p=> p.PrioridadTarea == entitiyframework.Models.Prioridad.Baja));
+});
+
+// Crear nueva tarea
+app.MapPost("/api/tareas", async ([FromServices] TareasContext dbContext, [FromBody] Tarea tarea) => 
+{
+    tarea.TareaId = Guid.NewGuid();
+    tarea.FechaCreacion = DateTime.Now;
+    await dbContext.AddAsync(tarea);
+    // otra forma de hacerlo
+    // await dbContext.Tareas.AddAsync(tarea);
+    await dbContext.SaveChangesAsync();
+    return Results.Ok();
 });
 
 app.Run();
