@@ -21,19 +21,35 @@ app.MapGet("/dbconnection", async ([FromServices] TareasContext dbContext) =>
 
 app.MapGet("/api/tareas", async ([FromServices] TareasContext dbContext) => 
 {
-    return Results.Ok(dbContext.Tareas.Include(p=>p.Categoria).Where(p=> p.PrioridadTarea == entitiyframework.Models.Prioridad.Baja));
+    // Se quita el include de Categoria y la restriccion Where
+    // return Results.Ok(dbContext.Tareas.Include(p=>p.Categoria).Where(p=> p.PrioridadTarea == entitiyframework.Models.Prioridad.Baja));
+    return Results.Ok(dbContext.Tareas);
 });
 
-// Crear nueva tarea
 app.MapPost("/api/tareas", async ([FromServices] TareasContext dbContext, [FromBody] Tarea tarea) => 
 {
     tarea.TareaId = Guid.NewGuid();
     tarea.FechaCreacion = DateTime.Now;
     await dbContext.AddAsync(tarea);
-    // otra forma de hacerlo
-    // await dbContext.Tareas.AddAsync(tarea);
     await dbContext.SaveChangesAsync();
     return Results.Ok();
+});
+
+// Actualizar tarea. FromRoute se obtiene el id de la ruta
+app.MapPut("/api/tareas/{id}", async ([FromServices] TareasContext dbContext, [FromBody] Tarea tarea, [FromRoute] Guid id) => 
+{
+    // Se busca la tarea por el id. Find siempre busca por PK.
+    var tareaDb = dbContext.Tareas.Find(id);
+    // Se actualizan los campos
+    if(tareaDb != null)
+    {
+        tareaDb.Titulo = tarea.Titulo;
+        tareaDb.Descripcion = tarea.Descripcion;
+        tareaDb.PrioridadTarea = tarea.PrioridadTarea;
+        await dbContext.SaveChangesAsync();
+        return Results.Ok();
+    }
+    return Results.NotFound();
 });
 
 app.Run();
