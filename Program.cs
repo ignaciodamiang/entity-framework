@@ -35,17 +35,27 @@ app.MapPost("/api/tareas", async ([FromServices] TareasContext dbContext, [FromB
     return Results.Ok();
 });
 
-// Actualizar tarea. FromRoute se obtiene el id de la ruta
 app.MapPut("/api/tareas/{id}", async ([FromServices] TareasContext dbContext, [FromBody] Tarea tarea, [FromRoute] Guid id) => 
 {
-    // Se busca la tarea por el id. Find siempre busca por PK.
     var tareaDb = dbContext.Tareas.Find(id);
-    // Se actualizan los campos
     if(tareaDb != null)
     {
         tareaDb.Titulo = tarea.Titulo;
         tareaDb.Descripcion = tarea.Descripcion;
         tareaDb.PrioridadTarea = tarea.PrioridadTarea;
+        await dbContext.SaveChangesAsync();
+        return Results.Ok();
+    }
+    return Results.NotFound();
+});
+
+// Eliminar tarea endpoint
+app.MapDelete("/api/tareas/{id}", async ([FromServices] TareasContext dbContext, [FromRoute] Guid id) => 
+{
+    var tareaDb = dbContext.Tareas.Find(id);
+    if(tareaDb != null)
+    {
+        dbContext.Remove(tareaDb);
         await dbContext.SaveChangesAsync();
         return Results.Ok();
     }
